@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express")); //npm i @types/express
 const morgan_1 = __importDefault(require("morgan")); //npm i @types/morgan
 const cors_1 = __importDefault(require("cors")); //npm i @types/cors
+const test_1 = __importDefault(require("./test"));
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -23,6 +24,7 @@ class Server {
         });
     }
     routes() {
+        this.app.use('/TEST', test_1.default);
     }
     start() {
         this.app.listen(this.app.get('port'), () => {

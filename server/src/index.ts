@@ -1,6 +1,7 @@
 import express, { Application } from 'express';//npm i @types/express
 import morgan from 'morgan';//npm i @types/morgan
 import cors from 'cors';//npm i @types/cors
+import TEST from './test'
 class Server {//PASO 1
     public app: Application;
     constructor() {
@@ -19,6 +20,7 @@ class Server {//PASO 1
         });
     }
     routes(): void {//TODAS LAS FUNCIONES
+        this.app.use('/TEST', TEST);
     }
 
     start(): void {

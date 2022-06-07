@@ -7,6 +7,12 @@ export class UsuarioService {
   API_URL = 'http://localhost:1000/'
   constructor(private http: HttpClient) { }
   getSerivicio() {
-    return this.http.get(`${this.API_URL}`)
+  }
+  getdataService(){
+    return this.http.get(`${this.API_URL}TEST/GetIncrementoExpress`);
+  }
+  getSaludoService(){
+    return this.http.get(`${this.API_URL}HI`)
   }
 }
+  
