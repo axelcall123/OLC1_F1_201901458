@@ -1,0 +1,12 @@
+* {
+    list-style: none;
+    text-decoration: none;
+    text-align: left;
+    
+}
+.left{
+    float: left;
+}
+#Titulo{
+    text-align: center;
+}

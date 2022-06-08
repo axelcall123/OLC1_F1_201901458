@@ -2,6 +2,8 @@ import express, { Application } from 'express';//npm i @types/express
 import morgan from 'morgan';//npm i @types/morgan
 import cors from 'cors';//npm i @types/cors
 import TEST from './test'
+import multipart from 'connect-multiparty';//npm i @types/connect-multiparty
+
 class Server {//PASO 1
     public app: Application;
     constructor() {

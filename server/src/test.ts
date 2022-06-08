@@ -22,6 +22,11 @@ class Test{
       res.json({ mensaje:`incrementando ${incrementando}` })
       res.send('hola');
     });
+
+    //SUBIR
+    this.router.post('/subir',function (req, res) {
+      
+    });
   }
 }
 //IMPORTANTE ESTO SI NO NO SIRVE
