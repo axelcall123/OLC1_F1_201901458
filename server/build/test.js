@@ -17,13 +17,11 @@ class Test {
         this.router.get('/GetIncrementoExpress', function (req, res) {
             res.json({ resultado: incrementando });
         });
+        //SUBIR
         this.router.post('/SetIncrementoExpress', function (req, res) {
             incrementando = req.body.numero;
             res.json({ mensaje: `incrementando ${incrementando}` });
             res.send('hola');
-        });
-        //SUBIR
-        this.router.post('/subir', function (req, res) {
         });
     }
 }

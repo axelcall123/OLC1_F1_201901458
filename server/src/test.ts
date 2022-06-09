@@ -8,7 +8,7 @@ class Test{
   };
 
   config(): void{
-    var incrementando=0;
+    var incrementando:number=0;
     this.router.get('/', (req, res) => res.json({ hola: 'wamos' }));
     this.router.get('/masmasExpress', function(req, res){
       incrementando++
@@ -17,15 +17,11 @@ class Test{
     this.router.get('/GetIncrementoExpress', function (req, res) {
       res.json({ resultado:incrementando })
     });
+    //SUBIR
     this.router.post('/SetIncrementoExpress', function (req, res) {
       incrementando=req.body.numero
       res.json({ mensaje:`incrementando ${incrementando}` })
       res.send('hola');
-    });
-
-    //SUBIR
-    this.router.post('/subir',function (req, res) {
-      
     });
   }
 }

@@ -1,8 +1,9 @@
 import express, { Application } from 'express';//npm i @types/express
 import morgan from 'morgan';//npm i @types/morgan
 import cors from 'cors';//npm i @types/cors
-import TEST from './test'
-import multipart from 'connect-multiparty';//npm i @types/connect-multiparty
+import TEST from './test';
+import GetFlp from './GetFlp';
+//import multipart from 'connect-multiparty';//npm i @types/connect-multiparty
 
 class Server {//PASO 1
     public app: Application;
@@ -23,7 +24,11 @@ class Server {//PASO 1
     }
     routes(): void {//TODAS LAS FUNCIONES
         this.app.use('/TEST', TEST);
+        this.app.use('/GetFlp', GetFlp);
     }
+
+
+    
 
     start(): void {
         this.app.listen(this.app.get('port'), () => {
