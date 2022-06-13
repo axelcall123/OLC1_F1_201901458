@@ -3,5 +3,5 @@ export abstract class Instruccion{
         this.line=line;
         this.column=column+1;
     }
-    public abstract ejecutar(): any
+    public abstract ejecutar(): any//NO ME IMPORTA LO QUE IMPORTA POR SE INSTRUCCION
 }
