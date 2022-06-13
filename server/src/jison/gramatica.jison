@@ -136,11 +136,11 @@ DECLARACION_CONDICIONAL:AUXA_IF 'pr_else' AUX_PARENTESIS_IF
 |AUX_IF_F AUX_PARENTESIS_IF
 ;
 AUX_PARENTESIS_IF:
-'{' /*FIXME:*/ '}'
+'{' /*FIXME:instrucciones*/ '}'
 ;
 
 AUX_SPARENTESIS_IF:
-/*FIXME:*/ ';'
+/*FIXME:instrucciones*/ ';'
 ;
 
 AUXA_IF:
@@ -182,7 +182,7 @@ CASE_FINAL:
 ;
 
 AUX_SWITCH:
-':' /*FIXME:*/ ';' INSTRUCCION_BREAK ';'
+':' /*FIXME:instrucciones*/ ';' INSTRUCCION_BREAK ';'
 ;
 
 INSTRUCCION_BREAK:pr_break
@@ -190,7 +190,7 @@ INSTRUCCION_BREAK:pr_break
 ;
 //FOR--------------------------------
 DECLARACION_FOR:
-'pr_for' '(' NO_INT 'er_id' '=' TIPODATO_DECLARACIO ';' 'er_id' 'er_comparacion' TIPODATO_DECLARACIO ';' EXPRESIONES ')' '{' /*FIXME:*/
+'pr_for' '(' NO_INT 'er_id' '=' TIPODATO_DECLARACIO ';' 'er_id' 'er_comparacion' TIPODATO_DECLARACIO ';' EXPRESIONES ')' '{' /*FIXME:instrucciones*/
 ;
 
 NO_INT:
@@ -199,7 +199,7 @@ TIPODATO_DECLARACION
 ;
 
 DECLARACION_WHILE:
-'pr_while' '(' WHILE_COMPARACION ) '{' /*FIXME:*/ '}'
+'pr_while' '(' WHILE_COMPARACION ) '{' /*FIXME:instrucciones*/ '}'
 ;
 
 WHILE_COMPARACION:'er_boolean'
@@ -211,7 +211,7 @@ WHILE_WHILE:
 ;
 //FUNCIONES--------------------------------
 DECLARACION_FUNCION:
-TIPO_METODO 'er_id' '(' DECLARACION_TIPO_DATO ')' '{' /*FIXME:*/'}'
+TIPO_METODO 'er_id' '(' DECLARACION_TIPO_DATO ')' '{' /*FIXME:instrucciones*/'}'
 ;
 
 TIPO_METODO:
