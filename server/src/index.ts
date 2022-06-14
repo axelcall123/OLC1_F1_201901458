@@ -4,7 +4,7 @@ import cors from 'cors';//npm i @types/cors
 import TEST from './test';
 import GetFlp from './FuncServer/GetFlp';
 import {incremento} from './funcionesEx/incremento'
-//const fs=require("fs");
+const fs=require("fs");
 //const parser=require('./jison/gramatica');
 
 //import multipart from 'connect-multiparty';//npm i @types/connect-multiparty
@@ -37,8 +37,8 @@ class Server {//PASO 1
         });
     }
     test(): void{
-        const tt:String=incremento("a");
-        console.log(`hola ${tt}`);
+        const tt:String=incremento("5--");
+        console.log(`holas ${tt}`);
     }
     leer():void{
         //const entrada =fs.reaFileSync('hola');

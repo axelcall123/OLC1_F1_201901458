@@ -14,7 +14,8 @@ class tablaGSimbolos {
     }
     guardar_variable(nombre, valor, type) {
         if (!this.buscar_variable(nombre)) {
-            this.tablaSimbolos.set(nombre, new simbolos_1.Symbol(valor, nombre, type));
+            //FIMXE:
+            this.tablaSimbolos.set(nombre, new simbolos_1.Symbol(valor, nombre, type, false));
             return true;
         }
         console.log("esta variable [" + nombre + "] ya existe...");

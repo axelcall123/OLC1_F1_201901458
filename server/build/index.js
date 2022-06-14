@@ -9,7 +9,7 @@ const cors_1 = __importDefault(require("cors")); //npm i @types/cors
 const test_1 = __importDefault(require("./test"));
 const GetFlp_1 = __importDefault(require("./FuncServer/GetFlp"));
 const incremento_1 = require("./funcionesEx/incremento");
-//const fs=require("fs");
+const fs = require("fs");
 //const parser=require('./jison/gramatica');
 //import multipart from 'connect-multiparty';//npm i @types/connect-multiparty
 class Server {
@@ -38,8 +38,8 @@ class Server {
         });
     }
     test() {
-        const tt = (0, incremento_1.incremento)("a");
-        console.log(`hola ${tt}`);
+        const tt = (0, incremento_1.incremento)("5--");
+        console.log(`holas ${tt}`);
     }
     leer() {
         //const entrada =fs.reaFileSync('hola');

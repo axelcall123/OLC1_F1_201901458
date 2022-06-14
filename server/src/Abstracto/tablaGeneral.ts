@@ -16,7 +16,8 @@ export class tablaGSimbolos {
     public guardar_variable(nombre: string, valor: any, type: Type): boolean {
 
         if (!this.buscar_variable(nombre)) {
-            this.tablaSimbolos.set(nombre, new Symbol(valor, nombre, type));
+            //FIMXE:
+            this.tablaSimbolos.set(nombre, new Symbol(valor, nombre, type,false));
             return true
         }
         console.log("esta variable [" + nombre + "] ya existe...");

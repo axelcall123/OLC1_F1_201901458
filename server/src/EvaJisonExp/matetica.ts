@@ -26,7 +26,6 @@ export class Aritmetica extends Expresion {
         
         if (this.type == AritmeticaOp.MAS) {
 
-
             if (nodoDer.type == Type.INT && nodoIzq.type == Type.INT) {
                 result = {
                     value: (nodoIzq.value + nodoDer.value),

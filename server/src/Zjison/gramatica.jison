@@ -1,6 +1,11 @@
 %{
     //codigo en JS
     //importaciones y declaraciones
+    //const {} = require('');
+    const {Aritmetica} = require('../Tipos/matetica');
+    const {LiteralVar} = require('../Tipos/literalVar');
+    const {incremento}= require('../funcionesEx/incremento');
+    let ids=[]
 %}
 %lex
 %options case-insensitive
@@ -121,34 +126,45 @@ EXPRESIONES: EXPRESIONES '+' MOREMORE{$$= new Aritmetica($1,$3,ArithmeticOption.
 |MOREMORE {$$=$1}
 ;
 
-TIPO_DECLARACION:'pr_const' | 'pr_let' | 'pr_var'
+TIPO_DECLARACION:'pr_const'{}
+| 'pr_let' {}
+| 'pr_var'{}
 ;
 
-TIPODATO_DECLARACION: 'pr_int' | 'pr_string' | 'pr_double' | 'pr_char' |'pr_boolean'
+TIPODATO_DECLARACION: 'pr_int' 
+| 'pr_string' 
+| 'pr_double' 
+| 'pr_char' 
+|'pr_boolean'
 ;
 
-EXPRECION_VARIABLE:'er_int' {$$=new Literal($1,Type.INT , @1.first_line, @1.first_column)}
-|'er_double' {$$=new Literal($1,Type.DOUBLE , @1.first_line, @1.first_column)}
-| 'er_string' {$$=new Literal($1,Type.STRING , @1.first_line, @1.first_column)}
-| 'er_char' {$$=new Literal($1,Type.CHAR , @1.first_line, @1.first_column)}
-| 'er_boolean' {$$=new Literal($1,Type.BOLEAN , @1.first_line, @1.first_column)}
+EXPRECION_VARIABLE:'er_int' {$$=new LiteralVar($1,Type.INT , @1.first_line, @1.first_column)}
+|'er_double' {$$=new LiteralVar($1,Type.DOUBLE , @1.first_line, @1.first_column)}
+| 'er_string' {$$=new LiteralVar($1,Type.STRING , @1.first_line, @1.first_column)}
+| 'er_char' {$$=new LiteralVar($1,Type.CHAR , @1.first_line, @1.first_column)}
+| 'er_boolean' {$$=new LiteralVar($1,Type.BOLEAN , @1.first_line, @1.first_column)}
 ;
 
 MOREMORE:
-'er_incremento' EXPRECION_VARIABLE
-|EXPRECION_VARIABLE 'er_incremento'
+'er_incremento' EXPRECION_VARIABLE{$$= tt=incremento($1+$2);}
+|EXPRECION_VARIABLE 'er_incremento'{$$= tt=incremento($1+$2);}
 |EXPRECION_VARIABLE{$$=$1}
 ;
 MOREMORE_AUX:
 ;
 //BLOQUE NORMAL--------------------------------
 DECLARACION: TIPO_DECLARACION DECLARACIONES_ID '=' EXPRESIONES ';'
+{
+
+    $$= new Declaracion(id,tipo,expresion,@1.first_line, @1.first_column );
+}
 |'er_id' DECLARACIONES_ID '=' 'pr_new' 'er_id' '(' DATOS_PARENTESIS_FUNCION ')' ';'
-|'er_id' 'er_incremento' 
+|'er_id' 'er_incremento'
+|'er_incremento' 'er_id'
 ;
 
-DECLARACIONES_ID:DECLARACIONES_ID ',' 'er_id'
-|'er_id'
+DECLARACIONES_ID:DECLARACIONES_ID ',' 'er_id'{$$=ids.push($3)}
+|'er_id'{$$=ids.push($1)}
 ;
 
 DATOS_PARENTESIS_FUNCION:DECLARACIONES_ID
@@ -206,6 +222,7 @@ INSTRUCCION_CASE 'pr_case' TIPODATO_DECLARACION AUX_SWITCH
 
 DEFAULT_CASE:
 CASE_FINAL 'pr_default' AUX_SWITCH
+|CASE_FINAL
 ; 
 
 CASE_FINAL:
@@ -222,7 +239,7 @@ INSTRUCCION_BREAK:pr_break
 ;
 //FOR--------------------------------
 DECLARACION_FOR:
-'pr_for' '(' NO_INT 'er_id' '=' TIPODATO_DECLARACIO ';' 'er_id' 'er_comparacion' TIPODATO_DECLARACIO ';' EXPRESIONES ')' '{' /*FIXME:instrucciones*/
+'pr_for' '(' NO_INT 'er_id' '=' EXPRECION_VARIABLE ';' 'er_id' 'er_comparacion' EXPRECION_VARIABLE ';' EXPRESIONES ')' '{' /*FIXME:instrucciones*/
 ;
 
 NO_INT:
@@ -231,7 +248,8 @@ TIPODATO_DECLARACION
 ;
 
 DECLARACION_WHILE:
-'pr_while' '(' WHILE_COMPARACION ) '{' /*FIXME:instrucciones*/ '}'
+WHILE_WHILE '{' /*FIXME:instrucciones*/ '}'
+'pr_do' '{' /*FIXME:instrucciones*/ WHILE_WHILE
 ;
 
 WHILE_COMPARACION:'er_boolean'
@@ -239,7 +257,7 @@ WHILE_COMPARACION:'er_boolean'
 ;
 
 WHILE_WHILE:
-'pr_while' '(' WHILE_COMPARACION )
+'pr_while' '(' WHILE_COMPARACION ')'
 ;
 //FUNCIONES--------------------------------
 DECLARACION_FUNCION:
@@ -257,7 +275,7 @@ DECLARACION_TIPO_DATO ',' TIPODATO_DECLARACION EXPRECION_VARIABLE
 |NADA
 ;
 
-NADA:;
+NADA:')';
 
 //CALL--------------------------------
 DECLARACION_CALL:
