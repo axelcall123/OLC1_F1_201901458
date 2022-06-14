@@ -1,4 +1,5 @@
 import {Router} from 'express'
+const {LiteralVar} = require('./EvaJisonExp/literalVar');
 class Test{
 
   public router: Router= Router()
@@ -23,6 +24,9 @@ class Test{
       res.json({ mensaje:`incrementando ${incrementando}` })
       res.send('hola');
     });
+  }
+
+  test(): void{
   }
 }
 //IMPORTANTE ESTO SI NO NO SIRVE

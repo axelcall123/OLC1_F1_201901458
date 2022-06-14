@@ -2,9 +2,10 @@ import express, { Application } from 'express';//npm i @types/express
 import morgan from 'morgan';//npm i @types/morgan
 import cors from 'cors';//npm i @types/cors
 import TEST from './test';
-import GetFlp from './Funciones/GetFlp';
-const fs=require("fs");
-const parser=require('./jison/gramatica');
+import GetFlp from './FuncServer/GetFlp';
+import {incremento} from './funcionesEx/incremento'
+//const fs=require("fs");
+//const parser=require('./jison/gramatica');
 
 //import multipart from 'connect-multiparty';//npm i @types/connect-multiparty
 
@@ -35,14 +36,21 @@ class Server {//PASO 1
             console.log('server encendido', this.app.get('port'));
         });
     }
-
-    public leer(){
+    test(): void{
+        const tt:String=incremento("a");
+        console.log(`hola ${tt}`);
+    }
+    leer():void{
         //const entrada =fs.reaFileSync('hola');
         //const ast=parser.parse(entrada.toString);
         //for(const elemento of ast){
         //    elemento.ejecutar();
         //}
+        
+    
     }
+    
 }
 const server = new Server();//OBJETO GUARDAR ESTE OBJETO Server
 server.start();//
+server.test();

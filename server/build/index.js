@@ -7,9 +7,10 @@ const express_1 = __importDefault(require("express")); //npm i @types/express
 const morgan_1 = __importDefault(require("morgan")); //npm i @types/morgan
 const cors_1 = __importDefault(require("cors")); //npm i @types/cors
 const test_1 = __importDefault(require("./test"));
-const GetFlp_1 = __importDefault(require("./Funciones/GetFlp"));
-const fs = require("fs");
-const parser = require('./jison/gramatica');
+const GetFlp_1 = __importDefault(require("./FuncServer/GetFlp"));
+const incremento_1 = require("./funcionesEx/incremento");
+//const fs=require("fs");
+//const parser=require('./jison/gramatica');
 //import multipart from 'connect-multiparty';//npm i @types/connect-multiparty
 class Server {
     constructor() {
@@ -36,6 +37,10 @@ class Server {
             console.log('server encendido', this.app.get('port'));
         });
     }
+    test() {
+        const tt = (0, incremento_1.incremento)("a");
+        console.log(`hola ${tt}`);
+    }
     leer() {
         //const entrada =fs.reaFileSync('hola');
         //const ast=parser.parse(entrada.toString);
@@ -46,3 +51,4 @@ class Server {
 }
 const server = new Server(); //OBJETO GUARDAR ESTE OBJETO Server
 server.start(); //
+server.test();
