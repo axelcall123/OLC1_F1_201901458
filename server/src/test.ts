@@ -1,5 +1,9 @@
 import {Router} from 'express'
-const {LiteralVar} = require('./EvaJisonExp/literalVar');
+//const {LiteralVar} = require('./EvaJisonExp/literalVar');
+//import {tablaGSimbolos} from './Abstracto/tablaGeneral'
+import { Environment } from './symbols/enviroment'
+const parser = require('./Zjison/gramatica');
+
 class Test{
 
   public router: Router= Router()
@@ -15,15 +19,39 @@ class Test{
       incrementando++
       res.json({ mensaje: 'incrementando i' })
     });
-    this.router.get('/GetIncrementoExpress', function (req, res) {
+    this.router.get('/GetIncrementoExpress', function (req, res) {//OBTIENE
       res.json({ resultado:incrementando })
     });
     //SUBIR
-    this.router.post('/SetIncrementoExpress', function (req, res) {
+    this.router.post('/SetIncrementoExpress', function (req, res) {//URL TEST/SetIncrementoExpres
       incrementando=req.body.numero
       res.json({ mensaje:`incrementando ${incrementando}` })
       res.send('hola');
     });
+
+    //OTENER TEXTAREA
+    var txt: string ="let";
+    this.router.post('/SetTxtAreaExpress', function (req, res) {//ENVIA
+        txt = req.body.txtarea//->se lo envio desde usuario service/getTxtAreaService
+        res.json({ mensaje: `E:vieneAngular<-------- ${txt}` })
+
+        //INTENTO DE LEER LO QUE ENVIO
+        const ast=parser.parse(txt)
+      const env_padre = new Environment(null);
+        for(const elemento of ast){
+            try {
+                elemento.executar(env_padre)
+              } catch (error) {
+            console.log(error);
+        }
+      }
+
+    });
+
+    this.router.get('/GetTxtAreaSaludoExpress', function (req, res) {//ENVIA
+      res.json({ mensaje: `E:reenviadoAngular--------> ${txt}` })
+    });
+
   }
 
   test(): void{

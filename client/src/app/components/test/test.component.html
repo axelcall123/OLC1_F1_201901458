@@ -2,6 +2,8 @@
 <button id="accion" (click)="getdatoComponente()">getDato</button>
 <button id="accion" (click)="getSaludo()">HI</button>
 <pre>
-    <input type="text" #titleInput> 
-    <button type="submit" (click) = 'addTodo(titleInput.value)'>Add</button> 
+    <textarea class="form-control" type="text" #titleInput rows="10"> </textarea>
+    <button type="submit" (click) = 'addTodo(titleInput.value)'>Add</button>
+    <p>vamos {{ms.mensaje}}</p>
+    <!-->esto es desde getSaludo<-->
 </pre>

@@ -64,8 +64,7 @@ export class Aritmetica extends Expresion {
                     type: Type.INT
                 }
             }
-
-            //demas validadionces para la operaciones aritmeticas
+            
 
         } else if (this.type == AritmeticaOp.MENOS) {
 

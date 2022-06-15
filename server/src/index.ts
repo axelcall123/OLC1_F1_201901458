@@ -3,9 +3,11 @@ import morgan from 'morgan';//npm i @types/morgan
 import cors from 'cors';//npm i @types/cors
 import TEST from './test';
 import GetFlp from './FuncServer/GetFlp';
-import {incremento} from './funcionesEx/incremento'
+//import { tablaGSimbolos } from "./Abstracto/tablaGeneral"
+//import { incremento } from './funcionesEx/incremento'
+
 const fs=require("fs");
-//const parser=require('./jison/gramatica');
+
 
 //import multipart from 'connect-multiparty';//npm i @types/connect-multiparty
 
@@ -23,7 +25,7 @@ class Server {//PASO 1
         this.app.use(express.json());//PERMITE APLICACIONES FORMATO JSON COMO ANGULAR
         this.app.use(express.urlencoded({ extended: false }));//FORMULARIO HTML
         this.app.get('/HI', (req, res) => {
-            res.json({ mensaje: "HI" })
+            res.json({ mensaje: "HIS" })//LO ENVIO ANGULAR DESDE getSaludoService
         });
     }
     routes(): void {//TODAS LAS FUNCIONES
@@ -37,20 +39,15 @@ class Server {//PASO 1
         });
     }
     test(): void{
-        const tt:String=incremento("5--");
-        console.log(`holas ${tt}`);
+        //const tt:String=incremento("10--");
+        //console.log(`holas ${tt}`);
     }
     leer():void{
-        //const entrada =fs.reaFileSync('hola');
-        //const ast=parser.parse(entrada.toString);
-        //for(const elemento of ast){
-        //    elemento.ejecutar();
-        //}
         
-    
     }
     
 }
 const server = new Server();//OBJETO GUARDAR ESTE OBJETO Server
 server.start();//
 server.test();
+server.leer();
