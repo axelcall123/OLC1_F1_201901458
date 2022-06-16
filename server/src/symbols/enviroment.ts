@@ -4,13 +4,22 @@ import { Type } from "./type";
 export class Environment {
   
   private tablaSimbolos: Map<string, Symbol>; //unicamente para variables, tienes q guardar funciones en otro map 
-  
+  private tablaSimbolos_metodos: Map<string, any>; //unicamente para metodos o funciones
+
+
   constructor(public anterior: Environment | null) {
     this.tablaSimbolos = new Map();
+    this.tablaSimbolos_metodos = new Map();
   }
 
   public getEnv(){
     return this.tablaSimbolos
+  }
+
+  public guardar_funcion(nombre: string, valor:any) {
+    
+    //verificar que no existan duplicados
+    this.tablaSimbolos_metodos.set(nombre, valor);
   }
 
   public guardar_variable(nombre: string, valor: any, type: Type): boolean {

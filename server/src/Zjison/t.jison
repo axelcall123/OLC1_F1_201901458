@@ -15,7 +15,7 @@ double [-]?[0-9]*[\.][0-9]+
 char [\'][^\']?[\']
 boolean "true"|"false"
 string  [\"][^\"]*[\\\"]*[\"]
-id [a-zA-Z0-9ñÑ][a-zA-Z0-9ñÑ_]*
+//id [a-zA-Z0-9ñÑ][a-zA-Z0-9ñÑ_]*
 incremento [\-\-]|[\+\+]
 //operacionaritmetica [\+]|[\-]|[\*]|[\/]|[\*\*]|[\%]
 //comparacion [<=]|[<]|[>=]|[>]|[!=]|[==]
@@ -30,7 +30,6 @@ incremento [\-\-]|[\+\+]
 {char} return 'er_char'
 {boolean} return 'er_boolean'
 {string} return 'er_string'
-{id} return 'er_id'
 {incremento} return 'er_incremento'
 //{comparacion} return 'er_comparacion'
 //{verdad} return 'er_verdad'
@@ -86,6 +85,8 @@ incremento [\-\-]|[\+\+]
 "}" return '}'
 ":" return ':'
 "=" return '='
+
+[a-zA-ZñÑ][a-zA-Z0-9_ñÑ]*	return 'er_id';
 <<EOF>>		            return 'EOF'
 
 .   { 
@@ -94,7 +95,6 @@ incremento [\-\-]|[\+\+]
     }
 
 /lex
-%left 'er_incremento'
 %left '!'
 %left '*' '/' '%'
 %left '+' '-'
@@ -110,12 +110,12 @@ INIT:  DECLARACION;
 |EXPRECION_VARIABLE
 ;*/
 
-EXPRESIONES: EXPRESIONES '+' MOREMORE{$$= new Aritmetica($1,$3,AritmeticaOp.MAS, @1.first_line, @1.first_column)}
-|EXPRESIONES '-' MOREMORE{$$= new Aritmetica($1,$3,AritmeticaOp.MENOS, @1.first_line, @1.first_column)}
-|EXPRESIONES '*' MOREMORE{$$= new Aritmetica($1,$3,AritmeticaOp.MULTIPLICACION, @1.first_line, @1.first_column)}
-|EXPRESIONES '/' MOREMORE{$$= new Aritmetica($1,$3,AritmeticaOp.DIVISION, @1.first_line, @1.first_column)}
-|EXPRESIONES '%' MOREMORE{$$= new Aritmetica($1,$3,AritmeticaOp.MODULAR, @1.first_line, @1.first_column)}
-|EXPRESIONES '**' MOREMORE{$$= new Aritmetica($1,$3,AritmeticaOp.ELEVAR, @1.first_line, @1.first_column)}
+EXPRESIONES: EXPRESIONES '+' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.MAS, @1.first_line, @1.first_column);}
+|EXPRESIONES '-' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.MENOS, @1.first_line, @1.first_column);}
+|EXPRESIONES '*' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.MULTIPLICACION, @1.first_line, @1.first_column);}
+|EXPRESIONES '/' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.DIV, @1.first_line, @1.first_column);}
+|EXPRESIONES '%' MOREMORE
+|EXPRESIONES '**' MOREMORE
 |EXPRESIONES '<=' MOREMORE
 |EXPRESIONES '<' MOREMORE
 |EXPRESIONES '>=' MOREMORE
@@ -127,28 +127,28 @@ EXPRESIONES: EXPRESIONES '+' MOREMORE{$$= new Aritmetica($1,$3,AritmeticaOp.MAS,
 |MOREMORE {$$=$1}
 ;
 
-TIPO_DECLARACION:'pr_const'{}
-| 'pr_let' {}
-| 'pr_var'{}
+TIPO_DECLARACION:'pr_const'{$$=$1;}
+| 'pr_let' {$$=$1;}
+| 'pr_var'{$$=$1;}
 ;
 
-TIPODATO_DECLARACION: 'pr_int' 
-| 'pr_string' 
-| 'pr_double' 
-| 'pr_char' 
-|'pr_boolean'
+TIPODATO_DECLARACION: 'pr_int' {$$=$1;}
+| 'pr_string' {$$=$1;}
+| 'pr_double' {$$=$1;} 
+| 'pr_char' {$$=$1;}
+|'pr_boolean' {$$=$1;}
 ;
 
-EXPRECION_VARIABLE:'er_int' {$$=new LiteralVar($1,Type.INT , @1.first_line, @1.first_column)}
-|'er_double' {$$=new LiteralVar($1,Type.DOUBLE , @1.first_line, @1.first_column)}
-| 'er_string' {$$=new LiteralVar($1,Type.STRING , @1.first_line, @1.first_column)}
-| 'er_char' {$$=new LiteralVar($1,Type.CHAR , @1.first_line, @1.first_column)}
-| 'er_boolean' {$$=new LiteralVar($1,Type.BOLEAN , @1.first_line, @1.first_column)}
+EXPRECION_VARIABLE:er_int {$$=new Literal($1,Type.NUMBER , @1.first_line, @1.first_column)} 
+|er_double  {$$=new Literal($1,Type.DOUBLE , @1.first_line, @1.first_column)}
+| er_string {$$=new Literal($1,Type.STRING , @1.first_line, @1.first_column)} 
+| er_char  {$$=new Literal($1,Type.CHAR , @1.first_line, @1.first_column)}
+| er_boolean {$$=new Literal($1,Type.BOOLEAN, @1.first_line, @1.first_column)}
 ;
 
 MOREMORE:
-'er_incremento' EXPRECION_VARIABLE{$$= tt=incremento($1+$2);}
-|EXPRECION_VARIABLE 'er_incremento'{$$= tt=incremento($1+$2);}
+er_incremento EXPRECION_VARIABLE//{$$= tt=incremento($1+$2);}
+|EXPRECION_VARIABLE er_incremento//{$$= tt=incremento($1+$2);}
 |EXPRECION_VARIABLE{$$=$1}
 ;
 MOREMORE_AUX:
@@ -156,18 +156,15 @@ MOREMORE_AUX:
 //BLOQUE NORMAL--------------------------------
 DECLARACION: TIPO_DECLARACION DECLARACION_AUXA
 |DECLARACION_AUXA
-|'er_id' DECLARACIONES_ID '=' 'pr_new' 'er_id' '(' DATOS_PARENTESIS_FUNCION ')' ';'
-|'er_id' 'er_incremento' ';'
-|'er_incremento' 'er_id' ';'
+/*|'er_id' DECLARACIONES_ID '=' 'pr_new' 'er_id' '(' DATOS_PARENTESIS_FUNCION ')' ';'
+|'er_id' er_incremento ';'
+|er_incremento 'er_id' ';'*/
 ;
 DECLARACION_AUXA:TIPODATO_DECLARACION DECLARACIONES_ID '=' EXPRESIONES ';'
 {
-
     for(i=0;i<=ids.length+1;i++){
-    //console.log(ids.pop());
-    $$= new Declaracion(ids.pop(),$1,$3,@1.first_line, @1.first_column );
-}
-    
+        $$= new Declaracion($3,$1,$5,@1.first_line, @1.first_column );
+    } 
 }
 ;
 
@@ -243,7 +240,7 @@ INSTRUCCION_BREAK:pr_break
 ;
 //FOR--------------------------------
 DECLARACION_FOR:
-'pr_for' '(' NO_INT 'er_id' '=' EXPRECION_VARIABLE ';' 'er_id' 'er_comparacion' EXPRECION_VARIABLE ';' EXPRESIONES ')' '{' /*FIXME:instrucciones*/
+'pr_for' '(' NO_INT 'er_id' '=' EXPRECION_VARIABLE ';' 'er_id' er_comparacion EXPRECION_VARIABLE ';' EXPRESIONES ')' '{' /*FIXME:instrucciones*/
 ;
 
 NO_INT:
@@ -256,7 +253,7 @@ WHILE_WHILE '{' /*FIXME:instrucciones*/ '}'
 'pr_do' '{' /*FIXME:instrucciones*/ WHILE_WHILE
 ;
 
-WHILE_COMPARACION:'er_boolean'
+WHILE_COMPARACION:er_boolean
 |EXPRESIONES
 ;
 

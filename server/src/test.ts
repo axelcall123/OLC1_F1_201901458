@@ -3,6 +3,8 @@ import {Router} from 'express'
 //import {tablaGSimbolos} from './Abstracto/tablaGeneral'
 import { Environment } from './symbols/enviroment'
 const parser = require('./Zjison/gramatica');
+import { Singleton } from "./patron_singleton/singleton";
+
 
 class Test{
 
@@ -36,14 +38,15 @@ class Test{
         res.json({ mensaje: `E:vieneAngular<-------- ${txt}` })
 
         //INTENTO DE LEER LO QUE ENVIO
+      console.log(`TXT ENVIADO ${txt}`)
         const ast=parser.parse(txt)
-      const env_padre = new Environment(null);
-        for(const elemento of ast){
+        const env_padre = new Environment(null);
+          for(const elemento of ast){
             try {
                 elemento.executar(env_padre)
               } catch (error) {
-            console.log(error);
-        }
+            //Singleton.add_errores(error)
+          }
       }
 
     });

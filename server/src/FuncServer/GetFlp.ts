@@ -1,14 +1,14 @@
 import { Router } from 'express';
 
-class GetJison{
+class GetJison {
     public router: Router = Router()
 
-    constructor(){//LLAMAR A LAS TURAS
+    constructor() {//LLAMAR A LAS TURAS
         this.config()
     };
     //get obtener
     //set leer
-    config():void{
+    config(): void {
         this.router.post('/Express', function (req, res) {
             var jisonStr: String = req.body.jison;
             res.json({ mensaje: `flp obtenido ${jisonStr}` });
