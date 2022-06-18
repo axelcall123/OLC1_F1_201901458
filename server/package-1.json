@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -w",
-    "dev": "nodemon build/index.js",
-    "jison": "jison ../server/src/Zjison/gramatica.jison  &&copy gramatica.js ./build/Zjison && move gramatica.js ./src/Zjison"
+    "jt": "jison ../server/src/Zjison/t.jison && move t.js ./src/Zjison",
+    "jj": "jison ../server/src/Zjison/gramatica.jison && move gramatica.js ./src/Zjison",
+    "dev": "nodemon build/index.js"
   },
   "keywords": [],
   "author": "",

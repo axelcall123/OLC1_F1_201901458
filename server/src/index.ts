@@ -35,7 +35,7 @@ class Server {//PASO 1
 
     start(): void {
         this.app.listen(this.app.get('port'), () => {
-            console.log('server encendido', this.app.get('port'));
+            console.log('server encendido->', this.app.get('port'));
         });
     }
     test(): void{

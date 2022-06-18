@@ -3,8 +3,8 @@ import {Router} from 'express'
 //import {tablaGSimbolos} from './Abstracto/tablaGeneral'
 import { Environment } from './symbols/enviroment'
 const parser = require('./Zjison/gramatica');
-import { Singleton } from "./patron_singleton/singleton";
-
+import {Singleton} from "./patron_singleton/singleton";
+const singleton = Singleton.getInstance()
 
 class Test{
 
@@ -43,10 +43,16 @@ class Test{
         const env_padre = new Environment(null);
           for(const elemento of ast){
             try {
-                elemento.executar(env_padre)
+              elemento.executar(env_padre)
               } catch (error) {
-            //Singleton.add_errores(error)
+              singleton.add_errores(error)
           }
+            console.log("Termine de recorrer el ast :) ahora mostrare lo que tiene el singleton consola")
+            console.log("Consola del usuario:-----------------------------");
+            console.log("Termine de recorrer el ast :) ahora mostrare lo que tiene el singleton consola")
+            console.log("Consola del usuario:-----------------------------");
+
+            console.log(singleton.get_consola());
       }
 
     });

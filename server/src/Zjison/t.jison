@@ -2,21 +2,30 @@
 %{
     //codigo en JS
     //importaciones y declaraciones
-    //const {} = require('');
-    const {Aritmetica} = require('../Tipos/matetica');
-    const {LiteralVar} = require('../Tipos/literalVar');
-    const {incremento}= require('../funcionesEx/incremento');
+    const {Declaracion} = require('../instrucciones/declaracion');
+    const {Literal} = require('../expresiones/literal')
+    const {Type} = require('../symbols/type');
+    const {Arithmetic} = require('../expresiones/aritmeticas');
+    const {Acceso} = require('../expresiones/Acceso');
+    const {ArithmeticOption} = require('../expresiones/aritmeticOption');
+    const {Bloque} = require('../instrucciones/Env')
+    const {Imprimir} = require('../instrucciones/imprimir')
+    const {Sentencia_if} = require('../instrucciones/condicionIf')
+    const {metodo} = require('../instrucciones/metodo')
+    var array_erroresLexicos;
     let ids=[]
 %}
 %lex
 %options case-insensitive
 int [-]?[0-9]+
-double [-]?[0-9]*[\.][0-9]+
-char [\'][^\']?[\']
-boolean "true"|"false"
 string  [\"][^\"]*[\\\"]*[\"]
-//id [a-zA-Z0-9ñÑ][a-zA-Z0-9ñÑ_]*
+boolean "true"|"false"
+char [\'][^\']?[\']
+double [-]?[0-9]*[\.][0-9]+
 incremento [\-\-]|[\+\+]
+
+//id [a-zA-Z0-9ñÑ][a-zA-Z0-9ñÑ_]*
+
 //operacionaritmetica [\+]|[\-]|[\*]|[\/]|[\*\*]|[\%]
 //comparacion [<=]|[<]|[>=]|[>]|[!=]|[==]
 //verdad [\|\|]|[&&]|[\^]|[!]
@@ -25,25 +34,32 @@ incremento [\-\-]|[\+\+]
 "//".*                // comentario simple línea
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] // comentario multiple líneas
 //expresiones regulare
-{double} return 'er_double'
 {int} return 'er_int'
-{char} return 'er_char'
-{boolean} return 'er_boolean'
 {string} return 'er_string'
+{boolean} return 'er_boolean'
+
+{double} return 'er_double'
+{char} return 'er_char'
+
+
 {incremento} return 'er_incremento'
 //{comparacion} return 'er_comparacion'
 //{verdad} return 'er_verdad'
 //palabras reservadas
-"int" return 'pr_int'
-"string" return 'pr_string'
-"double" return 'pr_double'
-"boolean" return 'pr_boolean'
-"char" return 'pr_char'
-"const" return 'pr_const'
 "let" return 'pr_let'
 "var" return 'pr_var'
+"const" return 'pr_const'
+
+"int" return 'pr_int'
+"string" return 'pr_string'
+"boolean" return 'pr_boolean'
+"print" return 'pr_print'
+"void" return 'pr_void'
 "if" return 'pr_if'
 "else" return 'pr_else'
+
+"double" return 'pr_double'
+"char" return 'pr_char'
 "switch" return 'pr_switch'
 "case" return 'pr_case'
 "break" return 'pr_break'
@@ -51,22 +67,29 @@ incremento [\-\-]|[\+\+]
 "while" return 'pr_while'
 "do" return 'pr_do'
 "continue" return 'pr_continue'
-"void" return 'pr_void'
 "call" return 'pr_call'
 "return" return 'pr_return'
 "println" return 'pr_println'
-"print" return 'pr_print'
+
 "type" return 'pr_type'
 "new" return 'pr_new'
 'default' return 'pr_default'
 //simbolos
+";" return ';'
+"=" return '='
 "+" return '+'
 "-" return '-'
 "*" return '*'
 "+" return '+'
 "/" return '/'
 "%" return '%'
+"(" return '('
+")" return ')'
+"{" return '{'
+"}" return '}'
 
+"," return ','
+":" return ':'
 "**" return '**'
 "<=" return '<='
 "<" return '<'
@@ -78,13 +101,7 @@ incremento [\-\-]|[\+\+]
 "&&" return '&&'
 "^" return '^'
 
-"," return ','
-"(" return '('
-")" return ')'
-"{" return '{'
-"}" return '}'
-":" return ':'
-"=" return '='
+
 
 [a-zA-ZñÑ][a-zA-Z0-9_ñÑ]*	return 'er_id';
 <<EOF>>		            return 'EOF'
@@ -111,11 +128,11 @@ INIT:  DECLARACION;
 ;*/
 
 EXPRESIONES: EXPRESIONES '+' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.MAS, @1.first_line, @1.first_column);}
-|EXPRESIONES '-' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.MENOS, @1.first_line, @1.first_column);}
+|EXPRESIONES '-' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.MENOS, @1.first_line, @1.first_column);}  
 |EXPRESIONES '*' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.MULTIPLICACION, @1.first_line, @1.first_column);}
 |EXPRESIONES '/' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.DIV, @1.first_line, @1.first_column);}
-|EXPRESIONES '%' MOREMORE
-|EXPRESIONES '**' MOREMORE
+|EXPRESIONES '%' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.MODULO, @1.first_line, @1.first_column);}
+|EXPRESIONES '**' MOREMORE {$$= new Arithmetic($1,$3,ArithmeticOption.PORPOR, @1.first_line, @1.first_column);}  
 |EXPRESIONES '<=' MOREMORE
 |EXPRESIONES '<' MOREMORE
 |EXPRESIONES '>=' MOREMORE
@@ -139,11 +156,11 @@ TIPODATO_DECLARACION: 'pr_int' {$$=$1;}
 |'pr_boolean' {$$=$1;}
 ;
 
-EXPRECION_VARIABLE:er_int {$$=new Literal($1,Type.NUMBER , @1.first_line, @1.first_column)} 
-|er_double  {$$=new Literal($1,Type.DOUBLE , @1.first_line, @1.first_column)}
-| er_string {$$=new Literal($1,Type.STRING , @1.first_line, @1.first_column)} 
-| er_char  {$$=new Literal($1,Type.CHAR , @1.first_line, @1.first_column)}
-| er_boolean {$$=new Literal($1,Type.BOOLEAN, @1.first_line, @1.first_column)}
+EXPRECION_VARIABLE:er_int  {$$=new Literal($1,Type.NUMBER , @1.first_line, @1.first_column)}
+|er_double {$$=new Literal($1,Type.DOUBLE, @1.first_line, @1.first_column)} 
+| er_string {$$=new Literal($1,Type.STRING , @1.first_line, @1.first_column)}
+| er_char {$$=new Literal($1,Type.CHAR , @1.first_line, @1.first_column)}
+| er_boolean {$$=new Literal($1,Type.DOUBLE , @1.first_line, @1.first_column)}
 ;
 
 MOREMORE:
@@ -156,12 +173,11 @@ MOREMORE_AUX:
 //BLOQUE NORMAL--------------------------------
 DECLARACION: TIPO_DECLARACION DECLARACION_AUXA
 |DECLARACION_AUXA
-/*|'er_id' DECLARACIONES_ID '=' 'pr_new' 'er_id' '(' DATOS_PARENTESIS_FUNCION ')' ';'
+|'er_id' DECLARACIONES_ID '=' 'pr_new' 'er_id' '(' DATOS_PARENTESIS_FUNCION ')' ';'
 |'er_id' er_incremento ';'
-|er_incremento 'er_id' ';'*/
+|er_incremento 'er_id' ';'
 ;
 DECLARACION_AUXA:TIPODATO_DECLARACION DECLARACIONES_ID '=' EXPRESIONES ';'
-{
     for(i=0;i<=ids.length+1;i++){
         $$= new Declaracion($3,$1,$5,@1.first_line, @1.first_column );
     } 
